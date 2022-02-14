@@ -120,12 +120,10 @@ def parse(input_filename, output_filename):
                 extra = re.sub("COLLATE [\w\d]+\s*", "", extra.replace("unsigned", ""))
 
                 # See if it needs type conversion
-                final_type = None
                 set_sequence = None
                 if type.startswith("tinyint("):
-                    type = "int4"
+                    type = "smallint"
                     set_sequence = True
-                    final_type = "boolean"
                 elif type.startswith("int("):
                     type = "integer"
                     set_sequence = True
@@ -170,8 +168,6 @@ def parse(input_filename, output_filename):
 
                     type = enum_name
 
-                if final_type:
-                    cast_lines.append("ALTER TABLE \"%s\" ALTER COLUMN \"%s\" DROP DEFAULT, ALTER COLUMN \"%s\" TYPE %s USING CAST(\"%s\" as %s)" % (current_table, name, name, final_type, name, final_type))
                 # ID fields need sequences [if they are integers?]
                 if name == "id" and set_sequence is True:
                     sequence_lines.append("CREATE SEQUENCE %s_id_seq" % (current_table))
