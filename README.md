@@ -38,3 +38,8 @@ More information
 ----------------
 
 You can learn more about the move which this powered at http://lanyrd.com/blog/2012/lanyrds-big-move/ and some technical details of it at http://www.aeracode.org/2012/11/13/one-change-not-enough/.
+
+UPDATES
+-------
+
+2023-08-04 : now this script is Python 3 ready. Python 2 needs adjustments, see "ADD THIS FOR PYTHON 2" in code.

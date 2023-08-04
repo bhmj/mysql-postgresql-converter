@@ -76,7 +76,9 @@ def parse(input_filename, output_filename):
             secs_left % 60,
         ))
         logging.flush()
-        line = line.decode("utf8").strip().replace(r"\\", "WUBWUBREALSLASHWUB").replace(r"\'", "''").replace("WUBWUBREALSLASHWUB", r"\\")
+        # if hasattr(line, "decode"):
+        #     line = line.decode("utf8")
+        line = line.strip().replace(r"\\", "WUBWUBREALSLASHWUB").replace(r"\'", "''").replace("WUBWUBREALSLASHWUB", r"\\")
         # Ignore comment lines
         if line.startswith("--") or line.startswith("/*") or line.startswith("LOCK TABLES") or line.startswith("DROP TABLE") or line.startswith("UNLOCK TABLES") or not line:
             continue
@@ -91,7 +93,9 @@ def parse(input_filename, output_filename):
                 comment_lines = []
             # Inserting data into a table?
             elif line.startswith("INSERT INTO"):
-                output.write(re.sub(r"([\(,])'0000-00-00'", r"\1'"+DATE_DEFAULT+"'", re.sub(r"([\(,])'0000-00-00 00:00:00'", r"\1'"+DATE_DEFAULT+"'", line.encode("utf8"))) + "\n")
+                # if hasattr(line, "decode"):
+                #     line = line.decode()
+                output.write(re.sub(r"([\(,])'0000-00-00'", r"\1'"+DATE_DEFAULT+"'", re.sub(r"([\(,])'0000-00-00 00:00:00'", r"\1'"+DATE_DEFAULT+"'", line)) + "\n")
                 num_inserts += 1
             # ???
             else:
@@ -195,7 +199,10 @@ def parse(input_filename, output_filename):
             elif line == ");":
                 output.write("CREATE TABLE \"%s\" (\n" % current_table)
                 for i, line in enumerate(creation_lines):
-                    output.write("    %s%s\n" % (line.encode("utf8"), "," if i != (len(creation_lines) - 1) else ""))
+                    # line = line.encode("utf8") -- ADD THIS FOR PYTHON 2
+                    if hasattr(line, "decode"):
+                        line = line.decode()
+                    output.write("    %s%s\n" % (line, "," if i != (len(creation_lines) - 1) else ""))
                 output.write(');\n\n')
                 # Write sequences out
                 output.write("\n-- Comments --\n")
